@@ -58,7 +58,7 @@ const Login = () => {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-card">
-          <h2 className="auth-title">Welcome Back!</h2>
+          <h1 className="auth-title">Welcome Back!</h1>
           <p className="auth-subtitle">Login to your Rentnest account</p>
 
           {error && (
