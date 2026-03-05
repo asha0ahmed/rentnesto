@@ -7,6 +7,7 @@ const { protect, isOwner } = require('../middleware/auth');
 const { checkInappropriateContent, checkPhoneNumber, checkPriceValidity } = require('../utils/contentFilter');
 const { validateImage, checkImageDimensions } = require('../utils/imageChecker');
 const { sanitizeString } = require('../utils/sanitize');
+const Fuse = require('fuse.js');  
 
 // Multer setup - store in memory
 const storage = multer.memoryStorage();
@@ -233,42 +234,53 @@ router.get('/', async (req, res) => {
       filter['features.furnished'] = furnished;
     }
 
-   // Search in title, description, and location fields
-    if (search) {
-      const safeSearch = sanitizeString(search);
-      filter.$or = [
-        { title: new RegExp(safeSearch, 'i') },
-        { description: new RegExp(safeSearch, 'i') },
-        { 'location.address': new RegExp(safeSearch, 'i') },
-        { 'location.area': new RegExp(safeSearch, 'i') },
-        { 'location.district': new RegExp(safeSearch, 'i') },
-        { 'location.division': new RegExp(safeSearch, 'i') }
-      ];
-    }
-
-    // Pagination
+   // ===== REMOVED REGEX SEARCH - USING FUZZY SEARCH INSTEAD =====
+   // Pagination
     const skip = (Number(page) - 1) * Number(limit);
 
     // Get properties with owner info
-    const properties = await Property.find(filter)
+    let properties = await Property.find(filter)
       .populate('owner', 'fullName email mobile')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit));
+      .sort({ createdAt: -1 });
+      // ===== FUZZY SEARCH =====
+if (search && search.trim()) {
+  const fuseOptions = {
+    keys: [
+      'title',
+      'description',
+      'location.area',
+      'location.district',
+      'location.address',
+      'location.division',
+      'amenities'
+    ],
+    threshold: 0.3,
+    includeScore: true,
+    minMatchCharLength: 3
+  };
 
-    // Get total count for pagination
-    const total = await Property.countDocuments(filter);
+  const fuse = new Fuse(properties, fuseOptions);
+  const fuzzyResults = fuse.search(search);
+  properties = fuzzyResults.map(result => result.item);
+}
+// ===== END FUZZY SEARCH =====
+  
+// Apply pagination to filtered results
+    const paginatedProperties = properties.slice(skip, skip + Number(limit));
+
+  // Get total count
+    const total = properties.length;
 
     res.status(200).json({
       success: true,
-      count: properties.length,
+      count: paginatedProperties.length,
       total,
       totalPages: Math.ceil(total / Number(limit)),
       currentPage: Number(page),
-      data: { properties }
-    });
+      data: { properties: paginatedProperties }
+     });
 
-  } catch (error) {
+ } catch (error) {
     console.error('Get properties error:', error);
     res.status(500).json({
       success: false,
