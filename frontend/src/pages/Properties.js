@@ -94,14 +94,17 @@ const Properties = () => {
           <form onSubmit={handleSearch} className="search-form">
             {/* Search Bar */}
             <div className="search-bar">
-              <input
-                type="text"
-                name="search"
-                className="form-input search-input"
-                placeholder="🔍 Search by title, location, or description..."
-                value={filters.search}
-                onChange={handleFilterChange}
-              />
+               <div className="search-input-wrapper">
+                 < img src="/search.png" alt="search" className="search-icon" />
+                   <input
+                     type="text"
+                     name="search"
+                     className="form-input search-input"
+                     placeholder="Search by title, location, or description..."
+                     value={filters.search}
+                     onChange={handleFilterChange}
+                    />
+                </div>
               <button type="submit" className="btn btn-primary">
                 Search
               </button>
