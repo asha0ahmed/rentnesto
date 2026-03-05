@@ -256,7 +256,7 @@ if (search && search.trim()) {
     ],
     threshold: 0.3,
     includeScore: true,
-    minMatchCharLength: 3
+    minMatchCharLength: 2
   };
 
   const fuse = new Fuse(properties, fuseOptions);
