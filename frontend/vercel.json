@@ -1,9 +1,9 @@
 {
   "redirects": [
     {
-      "source": "https://www.rentnesto.xyz/(.*)",
-      "destination": "https://rentnesto.xyz/$1",
-      "permanent": true
+      "source": "/docs/:path*",
+      "destination": "https://docs.example.com/:path*",
+      "permanent": false
     }
   ],
   "headers": [
@@ -13,6 +13,15 @@
         {
           "key": "Content-Type",
           "value": "application/xml; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
         }
       ]
     }
