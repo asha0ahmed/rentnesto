@@ -46,7 +46,8 @@ const Properties = () => {
   };
 
   // Fetch on component mount
- useEffect(() => {
+useEffect(() => {
+  document.title = 'Browse Properties - RentNesto Bangladesh';
   fetchProperties();
   // eslint-disable-next-line
 }, []);

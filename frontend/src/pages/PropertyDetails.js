@@ -10,10 +10,19 @@ const PropertyDetails = () => {
   const [error, setError] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  useEffect(() => {
-    fetchPropertyDetails();
-    // eslint-disable-next-line
-  }, [id]);
+useEffect(() => {
+  fetchPropertyDetails();
+  // eslint-disable-next-line
+}, [id]);
+
+useEffect(() => {
+  if (property) {
+    document.title = `${property.title} - RentNesto`;
+  }
+  return () => {
+    document.title = 'RentNesto - Rental Home in Bangladesh';
+  };
+}, [property]);
 
   const fetchPropertyDetails = async () => {
     setLoading(true);

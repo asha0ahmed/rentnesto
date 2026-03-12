@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "https://www.rentnesto.xyz/(.*)",
+      "destination": "https://rentnesto.xyz/$1",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/sitemap.xml",

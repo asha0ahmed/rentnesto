@@ -23,17 +23,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/properties" element={<Properties />} />
-          <Route path="/properties/:id" element={<PropertyDetails />} />
 
-          {/* Owner Protected Routes */}
-          <Route
-            path="/dashboard/owner"
-            element={
-              <ProtectedRoute ownerOnly={true}>
-                <OwnerDashboard />
-              </ProtectedRoute>
-            }
-          />
+          {/* SPECIFIC routes MUST come BEFORE dynamic /:id route */}
           <Route
             path="/properties/create"
             element={
@@ -47,6 +38,19 @@ function App() {
             element={
               <ProtectedRoute ownerOnly={true}>
                 <EditProperty />
+              </ProtectedRoute>
+            }
+          />
+
+          {/*Dynamic route LAST */}
+          <Route path="/properties/:id" element={<PropertyDetails />} />
+
+          {/* Owner Protected Routes */}
+          <Route
+            path="/dashboard/owner"
+            element={
+              <ProtectedRoute ownerOnly={true}>
+                <OwnerDashboard />
               </ProtectedRoute>
             }
           />
